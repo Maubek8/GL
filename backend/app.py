@@ -30,8 +30,10 @@ def init_db():
         conn.commit()
 
 @app.route("/")
+@app.route("/")
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    return "<h2>GL FORM ATIVO - HTML ENTREGUE COM SUCESSO</h2>"
+
 
 @app.route("/style.css")
 def style():
