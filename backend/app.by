@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import sqlite3
 import os
@@ -9,7 +9,7 @@ CORS(app)
 # Caminho do banco de dados
 DB_PATH = os.path.join(os.path.dirname(__file__), '../database/gl.db')
 
-# Cria a tabela se não existir
+# Criação automática do banco
 def init_db():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -31,14 +31,20 @@ def init_db():
         """)
         conn.commit()
 
+# Rota principal: entrega o formulário HTML
 @app.route("/")
-def home():
-    return {"msg": "API do GL – Gervásio Logistic está online."}
+def index():
+    return send_from_directory('../frontend', 'index.html')
 
+# Rota para servir o CSS
+@app.route("/style.css")
+def css():
+    return send_from_directory('../frontend', 'style.css')
+
+# Recebe dados do formulário
 @app.route("/enviar", methods=["POST"])
 def enviar_checklist():
     data = request.get_json()
-
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -60,9 +66,9 @@ def enviar_checklist():
             data.get("obs")
         ))
         conn.commit()
-
     return jsonify({"status": "sucesso", "mensagem": "Checklist salvo com sucesso."})
 
+# Rota para listar todos os envios
 @app.route("/listar", methods=["GET"])
 def listar_checklists():
     with sqlite3.connect(DB_PATH) as conn:
@@ -89,6 +95,7 @@ def listar_checklists():
 
     return jsonify(result)
 
+# Inicializa e roda
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
