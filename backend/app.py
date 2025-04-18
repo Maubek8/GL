@@ -31,8 +31,12 @@ def init_db():
 
 # Serve index.html automaticamente na raiz
 @app.route("/")
+@app.route('/')
 def index():
-    return send_from_directory(app.static_folder, "index.html")
+    caminho = os.path.abspath("../frontend/index.html")
+    print(f"===> SERVINDO ARQUIVO EM: {caminho}")
+    return send_from_directory(os.path.abspath("../frontend"), "index.html")
+
 
 # Serve style.css na raiz
 @app.route("/style.css")
