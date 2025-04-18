@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GL – Checklist Logístico</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f6fc;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px 40px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1a4d8f;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    textarea {
+      height: 80px;
+    }
+
+    button {
+      background-color: #1a4d8f;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #163c72;
+    }
+
+    .success-message {
+      color: green;
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GL – Checklist Logístico ART SCAN</h1>
+    <form id="checklist-form">
+
+      <label>Projeto:</label>
+      <input type="text" name="projeto" required>
+
+      <label>Gerente:</label>
+      <input type="text" name="gerente" required>
+
+      <label>Tipo de ART SCAN:</label>
+      <select name="art_scan">
+        <option value="Gás">Gás</option>
+        <option value="Óleo">Óleo</option>
+        <option value="Multiplataforma">Multiplataforma</option>
+      </select>
+
+      <label>Bateria:</label>
+      <select name="bateria">
+        <option value="Lítio A">Lítio A</option>
+        <option value="Lítio B">Lítio B</option>
+      </select>
+
+      <label>Quantidade de Baterias:</label>
+      <input type="number" name="bateria_qtd" min="0">
+
+      <label>Incluir Spars?</label>
+      <select name="spars">
+        <option value="Sim">Sim</option>
+        <option value="Não">Não</option>
+      </select>
+
+      <label>ToolTray:</label>
+      <select name="tooltray">
+        <option value="Curto">Curto</option>
+        <option value="Longo">Longo</option>
+      </select>
+
+      <label>Comprimento ToolTray (em metros):</label>
+      <input type="number" name="tooltray_metros" min="0">
+
+      <label>Quantidade de Push-Pull:</label>
+      <input type="number" name="pushpull" min="0">
+
+      <label>Outros acessórios:</label>
+      <textarea name="outros"></textarea>
+
+      <label>Observações:</label>
+      <textarea name="obs"></textarea>
+
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div class="success-message" id="success"></div>
+  </div>
+
+  <script>
+    document.getElementById("checklist-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      const body = Object.fromEntries(data.entries());
+
+      const response = await fetch("http://localhost:5000/enviar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      if (response.ok) {
+        document.getElementById("success").textContent = "Checklist enviado com sucesso!";
+        e.target.reset();
+      } else {
+        document.getElementById("success").textContent = "Erro ao enviar checklist.";
+      }
+    });
+  </script>
+</body>
+</html>
