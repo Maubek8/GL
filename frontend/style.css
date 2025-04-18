@@ -1,1 +1,105 @@
 
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f2f6fc;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Container central */
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px 40px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+/* Título */
+h1 {
+  text-align: center;
+  color: #1a4d8f;
+  margin-bottom: 30px;
+}
+
+/* Labels e inputs */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #222;
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #1a4d8f;
+  outline: none;
+}
+
+/* Textarea mais espaçada */
+textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+/* Botão de envio */
+button {
+  background-color: #1a4d8f;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 25px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #163c72;
+}
+
+/* Mensagem de sucesso */
+.success-message {
+  color: green;
+  margin-top: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  button {
+    width: 100%;
+  }
+}
