@@ -3,13 +3,11 @@ from flask_cors import CORS
 import sqlite3
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
 
-# Caminho do banco de dados
 DB_PATH = os.path.join(os.path.dirname(__file__), '../database/gl.db')
 
-# Criação automática do banco
 def init_db():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
@@ -25,77 +23,3 @@ def init_db():
                 tooltray TEXT,
                 tooltray_metros INTEGER,
                 pushpull INTEGER,
-                outros TEXT,
-                obs TEXT
-            )
-        """)
-        conn.commit()
-
-# Rota principal: entrega o formulário HTML
-@app.route("/")
-def index():
-    return send_from_directory('../frontend', 'index.html')
-
-# Rota para servir o CSS
-@app.route("/style.css")
-def css():
-    return send_from_directory('../frontend', 'style.css')
-
-# Recebe dados do formulário
-@app.route("/enviar", methods=["POST"])
-def enviar_checklist():
-    data = request.get_json()
-    with sqlite3.connect(DB_PATH) as conn:
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO checklists (
-                projeto, gerente, art_scan, bateria, bateria_qtd,
-                spars, tooltray, tooltray_metros, pushpull, outros, obs
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (
-            data.get("projeto"),
-            data.get("gerente"),
-            data.get("art_scan"),
-            data.get("bateria"),
-            data.get("bateria_qtd"),
-            data.get("spars"),
-            data.get("tooltray"),
-            data.get("tooltray_metros"),
-            data.get("pushpull"),
-            data.get("outros"),
-            data.get("obs")
-        ))
-        conn.commit()
-    return jsonify({"status": "sucesso", "mensagem": "Checklist salvo com sucesso."})
-
-# Rota para listar todos os envios
-@app.route("/listar", methods=["GET"])
-def listar_checklists():
-    with sqlite3.connect(DB_PATH) as conn:
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM checklists ORDER BY id DESC")
-        rows = cursor.fetchall()
-
-        result = []
-        for row in rows:
-            result.append({
-                "id": row[0],
-                "projeto": row[1],
-                "gerente": row[2],
-                "art_scan": row[3],
-                "bateria": row[4],
-                "bateria_qtd": row[5],
-                "spars": row[6],
-                "tooltray": row[7],
-                "tooltray_metros": row[8],
-                "pushpull": row[9],
-                "outros": row[10],
-                "obs": row[11]
-            })
-
-    return jsonify(result)
-
-# Inicializa e roda
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
